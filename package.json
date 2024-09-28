@@ -1,0 +1,16 @@
+{
+  "name": "javascript-word-game",
+  "version": "1.0.0",
+  "description": "this is a test with js and node js to make a simple web game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.0",
+    "socket.io": "^4.8.0"
+  }
+}
