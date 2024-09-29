@@ -5,54 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Word Guessing Game</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div class="top-section">
-      <div class="playerStatus">
-        <div id="playerCount">Connected players: 0</div>
-        <p>You are: <span id="playerRole">Waiting for role...</span></p>
+    <!-- Landing page section for creating or joining a lobby -->
+    <div id="landingPage">
+      <h1>Welcome to the Word Guessing Game!</h1>
+      <div class="lobbyControls">
+        <button id="createLobbyBtn" onclick="createLobby()">
+          Create Lobby
+        </button>
+        <input id="lobbyCodeInput" type="text" placeholder="Enter Lobby Code" />
+        <button id="joinLobbyBtn" onclick="joinLobby()">Join Lobby</button>
       </div>
     </div>
 
-    <div class="middle-section">
-      <div class="scores">
-        <p id="highscore">Highscore: 0</p>
-        <p id="playerScore">Score: 0</p>
+    <!-- Game section, hidden initially -->
+    <div id="gamePage" style="display: none">
+      <div class="top-section">
+        <div class="playerStatus">
+          <div id="lobbyCodeDisplayWrapper">
+            Lobby Code:
+            <span id="lobbyCodeDisplay">N/A</span>
+          </div>
+          <div id="playerCount">Connected players: 0</div>
+          <p>
+            You are: Player <span id="playerRole">Waiting for role...</span>
+          </p>
+        </div>
       </div>
 
-      <div class="word-section">
-        <p>Current word: <span id="word">Waiting...</span></p>
-        <form id="guessForm" onsubmit="submitGuess(); return false">
-          <input
-            id="guess"
-            type="text"
-            placeholder="Enter your guess"
-            required
-          />
-          <button id="confirmBtn">Confirm</button>
-        </form>
+      <div class="middle-section">
+        <div class="scores">
+          <p id="highscore">Highscore: 0</p>
+          <p id="playerScore">Score: 0</p>
+        </div>
+
+        <div class="word-section">
+          <p>Current word: <span id="word">Waiting...</span></p>
+          <form id="guessForm" onsubmit="submitGuess(); return false">
+            <input
+              id="guess"
+              type="text"
+              placeholder="Enter your guess"
+              required
+            />
+            <button id="confirmBtn">Confirm</button>
+          </form>
+        </div>
+
+        <div class="guesses">
+          <p>Player 1 Guess: <span id="player1Guess">Waiting...</span></p>
+          <p>Player 2 Guess: <span id="player2Guess">Waiting...</span></p>
+        </div>
+
+        <div class="result" id="result"></div>
       </div>
 
-      <!-- Move guesses section below the word input -->
-      <div class="guesses">
-        <p>Player 1 Guess: <span id="player1Guess">Waiting...</span></p>
-        <p>Player 2 Guess: <span id="player2Guess">Waiting...</span></p>
+      <div class="bottom-section">
+        <button id="resetBtn" onclick="resetScores()">
+          Reset Highscore & Score
+        </button>
+        <button
+          id="nextWordBtn"
+          class="next-word-btn"
+          onclick="requestNextWord()"
+        >
+          Next Word
+        </button>
       </div>
-
-      <div class="result" id="result"></div>
-    </div>
-
-    <div class="bottom-section">
-      <button id="resetBtn" onclick="resetScores()">
-        Reset Highscore & Score
-      </button>
-      <button
-        id="nextWordBtn"
-        class="next-word-btn"
-        onclick="requestNextWord()"
-      >
-        Next Word
-      </button>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

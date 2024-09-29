@@ -1,91 +1,214 @@
-body {
-  background-color: lightblue;
-  font-family: Arial, sans-serif;
-  text-align: center;
+/* General styles */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  font-family: "Roboto", sans-serif;
 }
 
-.top-section {
+body {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
   display: flex;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 10px;
-  background-color: lightgray;
-}
-
-.playerStatus {
-  font-size: 14px;
-  text-align: left;
-  margin-left: 10px;
-}
-
-.middle-section {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
-.middle-section p {
-  font-size: 24px;
-  margin: 5px 0;
-}
-.middle-section .scores {
-  padding-bottom: 20vh;
-}
-
-.word-section {
-  margin-top: 20px;
-  margin-bottom: 10vh;
+/* Landing Page Styling */
+#landingPage {
+  background-color: #2b2b2b;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
-.word-section #guess {
-  margin-top: 10vh;
+#landingPage h1 {
+  font-size: 36px;
+  color: #f0f0f0;
+  margin-bottom: 24px;
 }
 
-.guesses {
-  margin-top: 20px; /* Add space between word input and guesses */
-  font-size: 18px; /* Make the text size a bit larger */
+.lobbyControls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
+button,
 input {
-  padding: 10px;
-  font-size: 16px;
-  margin-right: 10px;
+  padding: 12px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 16px;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #357abd;
+}
+
+input {
+  border: 1px solid #555;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+/* Game Page Styling */
+#gamePage {
+  background-color: #2b2b2b;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 80%;
+  max-width: 600px;
+}
+
+.top-section,
+.middle-section,
+.bottom-section {
+  margin-bottom: 24px;
+}
+
+.playerStatus {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#lobbyCodeDisplayWrapper {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+#lobbyCodeDisplay {
+  font-size: 18px;
+  font-weight: 500;
+  color: #4caf50;
+}
+
+#playerCount {
+  font-size: 18px;
+}
+
+p {
+  font-size: 20px;
+  margin: 8px 0;
+}
+
+.scores p {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.word-section p {
+  font-size: 24px;
+  font-weight: 700;
+  color: #4a90e2;
+}
+
+input#guess {
+  width: 80%;
+  margin-top: 16px;
+  padding: 12px;
+  font-size: 18px;
+  border: 2px solid #444;
+  border-radius: 8px;
+  background-color: #333;
+  color: #fff;
+}
+
+input#guess:focus {
+  border-color: #4a90e2;
+}
+
+button#confirmBtn {
+  margin-top: 12px;
+  padding: 12px 24px;
+  background-color: #4a90e2;
+  color: white;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button#confirmBtn:hover {
+  background-color: #357abd;
+}
+
+.guesses p {
+  font-size: 20px;
+  font-weight: 400;
 }
 
 .result {
   margin-top: 20px;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
+  color: #4a90e2;
 }
 
 .bottom-section {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 20px;
+  justify-content: space-around;
 }
 
-#resetBtn {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
+button#resetBtn,
+button#nextWordBtn {
+  background-color: #ff5a5f;
+  color: white;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-#nextWordBtn {
-  margin: 0 auto;
+button#resetBtn:hover,
+button#nextWordBtn:hover {
+  background-color: #d94a4f;
 }
 
-.next-word-btn {
-  display: none;
+/* Animation */
+button,
+input {
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover,
+input:focus {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4a90e2;
+  border-radius: 5px;
 }

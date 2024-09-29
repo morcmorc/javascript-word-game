@@ -1,46 +1,5 @@
 const socket = io();
 let role = "";
-let currentLobbyCode = "";
-
-// Handle lobby creation
-function createLobby() {
-  socket.emit("create_lobby");
-}
-
-// Handle lobby joining
-function joinLobby() {
-  const lobbyCode = document.getElementById("lobbyCodeInput").value;
-  if (lobbyCode) {
-    socket.emit("join_lobby", lobbyCode);
-    // console.log(lobbyCode);
-    currentLobbyCode = lobbyCode; // Set current lobby code
-  }
-}
-
-// Listen for lobby creation confirmation
-socket.on("lobby_created", (data) => {
-  currentLobbyCode = data.lobbyCode;
-  document.getElementById("lobbyCodeDisplay").textContent = `${data.lobbyCode}`;
-  showGamePage(); // Switch to the game page
-});
-
-// Listen for lobby join confirmation
-socket.on("lobby_joined", (data) => {
-  currentLobbyCode = data.lobbyCode;
-  document.getElementById("lobbyCodeDisplay").textContent = `${data.lobbyCode}`;
-  showGamePage(); // Switch to the game page
-});
-
-// Function to show the game page and hide the landing page
-function showGamePage() {
-  document.getElementById("landingPage").style.display = "none"; // Hide landing page
-  document.getElementById("gamePage").style.display = "block"; // Show game page
-}
-
-// Listen for the game to start after both players have joined
-socket.on("start_game", (data) => {
-  document.getElementById("result").textContent = data.message;
-});
 
 // Listen for the word from the server
 socket.on("new_word", (word) => {
@@ -74,7 +33,6 @@ socket.on("result", (data) => {
 
 // Listen for player count updates
 socket.on("player_count", (count) => {
-  //   console.log(count);
   document.getElementById(
     "playerCount"
   ).textContent = `Connected players: ${count}`;
@@ -97,7 +55,7 @@ socket.on("score_update", (data) => {
 });
 
 function resetScores() {
-  socket.emit("reset_score", currentLobbyCode); // Pass the current lobby code
+  socket.emit("reset_score");
 }
 
 function disableBtn() {
@@ -109,22 +67,26 @@ function enableBtn() {
   button.disabled = false;
 }
 
-// Send the player's guess to the server with the lobby code
+function increaseScore() {
+  score++;
+  document.getElementById("score").textContent = score.toString();
+}
+
+// Send the player's guess to the server
 function submitGuess() {
   const guess = document.getElementById("guess").value;
-  if (!currentLobbyCode) return; // Ensure the player is in a lobby
 
   // Update the guess display for the correct player
-  if (role === 1) {
+  if (role === "Player 1") {
     document.getElementById("player1Guess").textContent = guess;
-  } else if (role === 2) {
+  } else if (role === "Player 2") {
     document.getElementById("player2Guess").textContent = guess;
   }
 
-  socket.emit("word_submit", { lobbyCode: currentLobbyCode, guess });
+  socket.emit("word_submit", guess);
 }
 
 // Request the next word manually
 function requestNextWord() {
-  socket.emit("next_word", currentLobbyCode); // Send current lobby code to the server
+  socket.emit("next_word");
 }
