@@ -1,3 +1,5 @@
+const germanCategories = require("./germanCategories.js");
+
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
@@ -9,13 +11,16 @@ const io = socketIo(server);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const words = ["apple", "banana", "cherry", "grape", "orange"];
+// const words = ["apple", "banana", "cherry", "grape", "orange"];
 let currentWord = "";
 let players = {};
 let playerCount = 0;
+let highscore = 0; // Tracks the highest score
+let sharedScore = 0; // Score shared by both players
 
 function selectRandomWord() {
-  currentWord = words[Math.floor(Math.random() * words.length)];
+  currentWord =
+    germanCategories[Math.floor(Math.random() * germanCategories.length)];
 }
 
 io.on("connection", (socket) => {
@@ -54,8 +59,17 @@ io.on("connection", (socket) => {
       // Determine if the guesses are the same
       if (guess1 === guess2) {
         io.emit("result", { success: true });
+        // If guesses match, award a point
+        sharedScore += 1;
+
+        if (sharedScore > highscore) {
+          highscore = sharedScore;
+        }
+        io.emit("score_update", { sharedScore, highscore });
       } else {
         io.emit("result", { success: false });
+        sharedScore = 0;
+        io.emit("score_update", { sharedScore, highscore });
       }
 
       // Don't reset the game automatically. Wait for "Next Word" request.
@@ -75,6 +89,13 @@ io.on("connection", (socket) => {
     delete players[socket.id];
 
     io.emit("player_count", playerCount);
+  });
+
+  // Reset highscore and score when requested by the client
+  socket.on("reset_score", () => {
+    sharedScore = 0;
+    highscore = 0;
+    io.emit("score_update", { sharedScore, highscore });
   });
 });
 

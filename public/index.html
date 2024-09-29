@@ -4,121 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Word Guessing Game</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin-top: 50px;
-      }
-      input {
-        padding: 10px;
-        font-size: 16px;
-      }
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        margin-left: 10px;
-      }
-      .result {
-        margin-top: 20px;
-        font-size: 18px;
-        font-weight: bold;
-      }
-      .player-count {
-        font-size: 16px;
-        color: gray;
-        margin-bottom: 20px;
-      }
-      .guesses {
-        margin-top: 10px;
-        font-size: 18px;
-      }
-      .next-word-btn {
-        margin-top: 20px;
-        display: none;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Word Guessing Game</h1>
-    <p>You are: <span id="playerRole">Waiting for role...</span></p>
-    <p>Try to guess the word that both players are thinking of!</p>
-
-    <div class="player-count" id="playerCount">Connected players: 0</div>
-
-    <div>
-      <p>Current word: <span id="word">Waiting...</span></p>
-      <input id="guess" type="text" placeholder="Enter your guess" />
-      <button onclick="submitGuess()">Confirm</button>
+    <div class="top-section">
+      <div class="playerStatus">
+        <div id="playerCount">Connected players: 0</div>
+        <p>You are: <span id="playerRole">Waiting for role...</span></p>
+      </div>
     </div>
 
-    <div class="guesses">
-      <p>Player 1 Guess: <span id="player1Guess">Waiting...</span></p>
-      <p>Player 2 Guess: <span id="player2Guess">Waiting...</span></p>
+    <div class="middle-section">
+      <div class="scores">
+        <p id="highscore">Highscore: 0</p>
+        <p id="playerScore">Score: 0</p>
+      </div>
+
+      <div class="word-section">
+        <p>Current word: <span id="word">Waiting...</span></p>
+        <form id="guessForm" onsubmit="submitGuess(); return false">
+          <input
+            id="guess"
+            type="text"
+            placeholder="Enter your guess"
+            required
+          />
+          <button id="confirmBtn">Confirm</button>
+        </form>
+      </div>
+
+      <!-- Move guesses section below the word input -->
+      <div class="guesses">
+        <p>Player 1 Guess: <span id="player1Guess">Waiting...</span></p>
+        <p>Player 2 Guess: <span id="player2Guess">Waiting...</span></p>
+      </div>
+
+      <div class="result" id="result"></div>
     </div>
 
-    <div class="result" id="result"></div>
-
-    <button class="next-word-btn" id="nextWordBtn" onclick="requestNextWord()">
-      Next Word
-    </button>
+    <div class="bottom-section">
+      <button id="resetBtn" onclick="resetScores()">
+        Reset Highscore & Score
+      </button>
+      <button
+        id="nextWordBtn"
+        class="next-word-btn"
+        onclick="requestNextWord()"
+      >
+        Next Word
+      </button>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-      const socket = io();
-      let role = "";
-
-      // Listen for the word from the server
-      socket.on("new_word", (word) => {
-        document.getElementById("word").textContent = word;
-        document.getElementById("result").textContent = ""; // Clear previous result
-        document.getElementById("guess").value = ""; // Clear input field
-        document.getElementById("player1Guess").textContent = "Waiting...";
-        document.getElementById("player2Guess").textContent = "Waiting...";
-        document.getElementById("nextWordBtn").style.display = "none"; // Hide button
-      });
-
-      // Listen for the player's assigned role (Player 1 or Player 2)
-      socket.on("assign_role", (playerRole) => {
-        document.getElementById("playerRole").textContent = playerRole;
-        role = playerRole;
-      });
-
-      // Listen for the result
-      socket.on("result", (data) => {
-        if (data.success) {
-          document.getElementById("result").textContent =
-            "You both guessed right!";
-        } else {
-          document.getElementById("result").textContent =
-            "Game Over! Guesses did not match.";
-        }
-        document.getElementById("nextWordBtn").style.display = "inline-block"; // Show "Next Word" button
-      });
-
-      // Listen for player count updates
-      socket.on("player_count", (count) => {
-        document.getElementById(
-          "playerCount"
-        ).textContent = `Connected players: ${count}`;
-      });
-
-      // Listen for both guesses
-      socket.on("guesses", (data) => {
-        document.getElementById("player1Guess").textContent = data.player1Guess;
-        document.getElementById("player2Guess").textContent = data.player2Guess;
-      });
-
-      // Send the player's guess to the server
-      function submitGuess() {
-        const guess = document.getElementById("guess").value;
-        socket.emit("word_submit", guess);
-      }
-
-      // Request the next word manually
-      function requestNextWord() {
-        socket.emit("next_word");
-      }
-    </script>
+    <script src="/client.js"></script>
   </body>
 </html>
